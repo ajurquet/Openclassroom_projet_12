@@ -26,16 +26,26 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+from rest_framework_nested import routers
+
+
+
 router = SimpleRouter()
+
 router.register(r'clients', ClientViewSet, basename='clients')
-# router.register(r'users', UserViewSet, basename='users')
-router.register(r'contracts', ContractViewSet, basename="contrat")
-router.register(r'events', EventViewSet, basename="events")
+
+clients_router = routers.NestedSimpleRouter(router, r'clients', lookup='clients')   
+clients_router.register(r'contracts', ContractViewSet, basename="contrats")
+
+contracts_router = routers.NestedSimpleRouter(clients_router, r'contracts', lookup='contracts')
+contracts_router.register(r'events', EventViewSet, basename='events')
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('', include(router.urls)),
+    path(r'', include(router.urls)),
+    path(r'', include(clients_router.urls)),
+    path(r'', include(contracts_router.urls))
 ]

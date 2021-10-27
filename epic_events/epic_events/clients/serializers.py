@@ -19,4 +19,3 @@ class ClientSerializer(ModelSerializer):
                   "sales_contact",
                   "already_known"
                   ]
-
