@@ -22,4 +22,4 @@ class IsSaleEmployeeOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return obj.support_contact == request.user
+        return obj.sales_contact == request.user

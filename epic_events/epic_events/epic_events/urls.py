@@ -19,15 +19,11 @@ from rest_framework.routers import SimpleRouter
 from clients.views import ClientViewSet
 from events.views import EventViewSet
 from contracts.views import ContractViewSet
-
-
+from rest_framework_nested import routers
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-
-from rest_framework_nested import routers
-
 
 
 router = SimpleRouter()

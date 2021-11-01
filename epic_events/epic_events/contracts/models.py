@@ -17,8 +17,7 @@ class Contract(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
     status = models.BooleanField(default=False)
-    amount = models.FloatField()
- 
+    amount = models.CharField(max_length=50)
  
     def __str__(self):
         return f"Contract n°:{self.id} - Client : {self.client.company_name}"
