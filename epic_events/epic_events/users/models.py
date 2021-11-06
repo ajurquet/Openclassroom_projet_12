@@ -37,10 +37,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def save(self, *args, **kwargs):
         user = super(User, self)
-        user.set_password(self.password)
-        user.save()
-        return user
+        if user.password is not None:
+            user.set_password(self.password)
+            user.save()
+        return self
 
-
+   
     class Meta:
         ordering = ("last_name", "first_name")

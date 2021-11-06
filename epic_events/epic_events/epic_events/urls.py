@@ -39,7 +39,7 @@ contracts_router.register(r'events', EventViewSet, basename='events')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('login/', TokenObtainPairView.as_view(), name='login'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path(r'', include(router.urls)),
     path(r'', include(clients_router.urls)),

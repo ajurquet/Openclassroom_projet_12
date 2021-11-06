@@ -1,8 +1,8 @@
 from django.db import models
 from django.db.models.deletion import CASCADE, RESTRICT
 from users.models import User
-from clients.models import Client
 from contracts.models import Contract
+from django.conf import settings
 
 
 class Event(models.Model):
@@ -13,7 +13,7 @@ class Event(models.Model):
                                   null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
-    support_contact = models.ForeignKey(User,
+    support_contact = models.ForeignKey(settings.AUTH_USER_MODEL,
                                         on_delete=RESTRICT,
                                         related_name="event_assigned_to")
 

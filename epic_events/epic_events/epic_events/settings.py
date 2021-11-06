@@ -156,13 +156,15 @@ REST_FRAMEWORK = {
 # Custom user model
 AUTH_USER_MODEL = 'users.User'
 
+LOGIN_REDIRECT_URL = '/clients'
+
 # AUTHENTICATION_BACKENDS = (
 #         'django.contrib.auth.backends.RemoteUserBackend',
 #         'django.contrib.auth.backends.ModelBackend',
 # )
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=50),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,

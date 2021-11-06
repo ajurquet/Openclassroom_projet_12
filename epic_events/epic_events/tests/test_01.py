@@ -1,130 +1,109 @@
+from django.contrib import admin
+from django.http import response
 import pytest
+from rest_framework.test import APIClient
+from tests.factories import ClientFactory
+# from clients.models import Client as Clt
+# from django.test import Client
+from conftest import get_tokens_for_user
 
 from django.urls import reverse
 
-# @pytest.mark.django_db
-# def test_create_management_user(user_factory):
-#     user = user_factory.create(role='MANAGEMENT')
-#     print(user.email)
-#     assert True
+from django.contrib.auth import get_user_model
+from django import urls
 
-# @pytest.mark.django_db
-# def test_create_management_user1(user_factory):
-#     user = user_factory.create(role='SALES')
-#     print(user.email)
-#     assert True
+# from rest_framework_simplejwt.tokens import RefreshToken
+
+# def get_tokens_for_user(user):
+#     refresh = RefreshToken.for_user(user)
+#     return refresh.access_token
+
+# Fixtures :
+# sales_user_client
+# support_user_client
+# management_user_client
+# admin_user_client
+# sales_user
+# management_user
+# support_user
+# admin_user
 
 
 
 @pytest.mark.django_db
-def test_employee_vente_modification_client(client, user_factory, client_factory):
-
-    sales_user = user_factory.create(role="SALES")
-    print(sales_user.email)
-    clt = client_factory.create()
-    print(clt.email)
-    client.login(username=sales_user.email, password=sales_user.password)
-    url = reverse("clients")
-    response = client.get(url)
+def test_sales_user_access_to_clients(sales_user_client):
+    clients_url = urls.reverse('clients-list')
+    response = sales_user_client.get(clients_url)
     assert response.status_code == 200
 
 
-# @pytest.mark.django_db
-# def test_employee_vente_modification_client01(client):
-    
-#     def new_sales_user(user_factory):
-#         sales_user = user_factory.create(role="SALES")
-#         return sales_user
-#     def new_clt(client_factory):
-#         clt = client_factory.create(sales_contact=new_sales_user)
-#         return clt
-    
-#     print(new_sales_user)
-#     # print(clt.email)
+@pytest.mark.django_db
+def test_sales_user_update_client(sales_user, client_factory):
+    """
+    GIVEN a user and a client associated to the user
+    WHEN a user try to update the client
+    THEN check is the client is correctly updated
+    """
+    clt = APIClient()
+    refresh_token = get_tokens_for_user(sales_user)
+    clt.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh_token}')
+    client = client_factory.create(sales_contact=sales_user)
+    response = clt.patch('/clients/1/', {'first_name': 'Roberto'})
+    assert response.status_code == 200
+    assert b'"first_name":"Roberto"' in response.content
 
-#     response = client.get("/clients/")
+
+@pytest.mark.django_db
+def test_sales_user_update_client_not_associated(sales_user, client_factory):
+    """
+    GIVEN a user and a client NOT associated to the user
+    WHEN a user try to update the client
+    THEN check if the user is not able to update the client
+    """
+    clt = APIClient()
+    refresh_token = get_tokens_for_user(sales_user)
+    clt.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh_token}')
+    client = client_factory.create()
+    print(client)
+    response = clt.patch('/clients/2/', {'first_name': 'Roberto'})
+    assert response.status_code == 403
+
+
+
+
+
+# @pytest.mark.django_db
+# def test_user_login(sales_user):
+#     login_url = urls.reverse('login')
+#     c = APIClient()
+#     c.force_login(sales_user)
+#     response = c.post(login_url, {'email': sales_user.email, 'password': sales_user.password}) #  data={'email': sales_user.email, 'password': sales_user.password}
+#     assert response.status_code == 302 # 302 redirection
+
+
+# @pytest.mark.django_db
+# def test_sales_user_permission(sales_user, client_factory):
+#     c = Client()
+#     c.force_login(sales_user)
+#     client = client_factory(sales_contact=sales_user)
+#     print(client.sales_contact.role)
+#     response = c.put('/clients/1/', {'first_name': 'Roberto'})
+#     print(response.content)
 #     assert response.status_code == 200
 
 
 
-
-
-# def test_set_check_password(management_user):
-#     print(management_user)
-#     print(management_user.password)
-#     management_user.set_password("new_password")
-#     print(management_user.password)
-#     assert management_user.check_password("new_password")
-
 # @pytest.mark.django_db
-# def test_new_client(client_factory):
-    
-#     client = client_factory.build() # Permet de créer un objet sans le sauvegarder dans la base de données
-#     client = client_factory.create()
-    
-#     print(client.first_name)
-#     print(client.last_name)
-#     print(client.mobile)
-#     print(client.company_name)
-    
-    
-#     assert True
+# def test_admin_user_connect_to_admin_interface(admin_user):
+#     c = Client()
+#     c.force_login(admin_user)
+#     print(admin_user.is_superuser)
+#     print(admin_user.is_admin)
+#     print(admin_user.password)
 
-# def test_new_client(new_client):
-#     print(new_client.email)
-#     assert True
+#     response = c.get('/admin/')
+#     print(response.content)
+#     assert response.status_code == 200
+#     assert b"Administration de Django" in response.content
+#     assert b"Authentification et autorisation" in response.content
 
-
-
-
-
-
-# from django.contrib.auth.models import User
-# from users.models import User
-
-
-# @pytest.mark.django_db  # Donne accès à la base de données
-# def test_user_create():
-#     user = User.objects.create_user(email="test@pytest.com",
-#                                     first_name="pytest_prenom",
-#                                     last_name="pytest_nom",
-#                                     role="MANAGEMENT",
-#                                     password="pytest")
-#     count = User.objects.all().count()
-#     print(count)
-#     print(user)
-#     assert User.objects.count() == 1
-
-
-
-
-
-
-
-
-
-# def test_example1(fixture_1):
-#     num = fixture_1
-#     assert num == 1
-
-
-
-# class User(AbstractBaseUser, PermissionsMixin):
-#     ROLE = [
-#         ('SALES', 'Sales'),
-#         ('SUPPORT', 'Support'),
-#         ('MANAGEMENT', 'Management')
-#         ]
-
-#     username = None
-#     email = models.EmailField(('Email'), unique=True)
-#     first_name = models.CharField(max_length=25, blank=False)
-#     last_name = models.CharField(max_length=25, blank=False)
-#     role = models.CharField(max_length=10, choices=ROLE)
-
-#     is_active = models.BooleanField(default=True)
-#     is_staff = models.BooleanField(default=True)
-#     is_admin = models.BooleanField(default=False)
-
-#     USERNAME_FIELD = 'email'
-#     REQUIRED_FIELDS = ['first_name', 'last_name']

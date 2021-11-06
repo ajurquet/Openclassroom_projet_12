@@ -16,16 +16,17 @@ class UserSerializer(serializers.ModelSerializer):
                   'is_admin',)
 
         extra_kwargs = {'password': {'write_only': True}}
+        
 
-    def create(self, validated_data):
-        user = User.objects.create(
-            email=validated_data["email"],
-            first_name=validated_data["first_name"],
-            last_name=validated_data["last_name"],
-            role=validated_data["role"]
-        )
-        user.set_password(validated_data["password"])
-        user.save()
-        return user
+    # def create(self, validated_data):
+    #     user = User.objects.create(
+    #         email=validated_data["email"],
+    #         first_name=validated_data["first_name"],
+    #         last_name=validated_data["last_name"],
+    #         role=validated_data["role"]
+    #     )
+    #     user.set_password(validated_data["password"])
+    #     user.save()
+    #     return user
 
 

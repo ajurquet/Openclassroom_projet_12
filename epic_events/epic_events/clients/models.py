@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models.deletion import RESTRICT
-from users.models import User
+from django.conf import settings
 
 class Client(models.Model):
     first_name = models.CharField(max_length=25)
@@ -11,7 +11,7 @@ class Client(models.Model):
     company_name = models.CharField(max_length=250)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
-    sales_contact = models.ForeignKey(User,
+    sales_contact = models.ForeignKey(settings.AUTH_USER_MODEL,
                                          on_delete=RESTRICT,
                                          related_name="client_assigned_to",
                                          null=True,
