@@ -9,7 +9,8 @@ class Contract(models.Model):
     sales_contact = models.ForeignKey(settings.AUTH_USER_MODEL,
                                       on_delete=RESTRICT,
                                       related_name="contract_assigned_to",
-                                      blank=True)
+                                      blank=True,
+                                      null=True)
     client = models.ForeignKey(Client,
                                   on_delete=RESTRICT,
                                   related_name="contract_connected_to")

@@ -8,7 +8,7 @@ class EventSerializer(ModelSerializer):
     class Meta:
         model = Event
         fields = ["name",
-                  "contract"
+                  "contract",
                   "date_created",
                   "date_updated",
                   "support_contact",

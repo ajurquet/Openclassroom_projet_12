@@ -15,7 +15,8 @@ class Event(models.Model):
     date_updated = models.DateTimeField(auto_now=True)
     support_contact = models.ForeignKey(settings.AUTH_USER_MODEL,
                                         on_delete=RESTRICT,
-                                        related_name="event_assigned_to")
+                                        related_name="event_assigned_to",
+                                        null=True)
 
     attendees = models.IntegerField()
     event_date = models.DateTimeField()

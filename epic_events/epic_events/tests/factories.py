@@ -1,9 +1,10 @@
+from datetime import datetime
+from django.utils import timezone
 import factory
 from faker import Faker
 fake = Faker('fr_FR')
 
 from clients.models import Client
-# from users.models import User
 from django.contrib.auth import get_user_model
 from contracts.models import Contract
 from events.models import Event
@@ -32,7 +33,7 @@ class ClientFactory(factory.django.DjangoModelFactory):
     phone = fake.phone_number()
     mobile = fake.phone_number()
     company_name = fake.company()
-    # sales_contact = ""
+    sales_contact = factory.SubFactory(UserFactory)
 
 
 class ContractFactory(factory.django.DjangoModelFactory):
@@ -53,4 +54,4 @@ class EventFactory(factory.django.DjangoModelFactory):
     support_contact = factory.SubFactory(UserFactory)
     attendees = fake.random_int(min = 30)
     notes = fake.text()
-
+    event_date = timezone.now()

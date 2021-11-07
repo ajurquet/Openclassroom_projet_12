@@ -13,7 +13,7 @@ class IsSupportEmployeeOrReadOnly(permissions.BasePermission):
         return obj.support_contact == request.user
 
 
-class IsSaleEmployeeOrReadOnly(permissions.BasePermission):
+class IsSaleEmployeeConnectedToTheEventOrReadOnly(permissions.BasePermission):
 
       def has_object_permission(self, request, view, obj):
 
@@ -22,4 +22,5 @@ class IsSaleEmployeeOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return obj.sales_contact == request.user
+        return obj.contract.client.sales_contact == request.user
+      

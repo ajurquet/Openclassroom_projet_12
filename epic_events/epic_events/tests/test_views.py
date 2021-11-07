@@ -40,13 +40,16 @@ def test_sales_user_access_to_clients(sales_user_client):
 
 @pytest.mark.django_db
 def test_sales_user_access_to_contracts(sales_user_client):
-    response = sales_user_client.get("/clients/contracts/")
+    response = sales_user_client.get("/contracts/")
     assert response.status_code == 200
 
 @pytest.mark.django_db
 def test_sales_user_access_to_events(sales_user_client):
-    response = sales_user_client.get("/clients/contracts/events")
+    response = sales_user_client.get("/events/")
     assert response.status_code == 200
+
+
+
 
 # @pytest.mark.django_db
 # def test_sales_user_access_to_clients(sales_user_client):

@@ -36,12 +36,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"{self.first_name} {self.last_name} - Role : {self.role}"
 
     def save(self, *args, **kwargs):
-        user = super(User, self)
-        if user.password is not None:
-            user.set_password(self.password)
-            user.save()
-        return self
 
-   
+        if self.role == 'MANAGEMENT':
+            self.is_admin = True
+
+        if self.password is not None:
+            self.set_password(self.password)
+        return super(User, self).save(*args, **kwargs)
+  
+     
     class Meta:
         ordering = ("last_name", "first_name")

@@ -28,13 +28,9 @@ from rest_framework_simplejwt.views import (
 
 router = SimpleRouter()
 
-router.register(r'clients', ClientViewSet, basename='clients')
-
-clients_router = routers.NestedSimpleRouter(router, r'clients', lookup='clients')   
-clients_router.register(r'contracts', ContractViewSet, basename="contrats")
-
-contracts_router = routers.NestedSimpleRouter(clients_router, r'contracts', lookup='contracts')
-contracts_router.register(r'events', EventViewSet, basename='events')
+router.register(r'clients', ClientViewSet, basename='clients')  
+router.register(r'contracts', ContractViewSet, basename="contracts")
+router.register(r'events', EventViewSet, basename='events')
 
 
 urlpatterns = [
@@ -42,6 +38,4 @@ urlpatterns = [
     path('login/', TokenObtainPairView.as_view(), name='login'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path(r'', include(router.urls)),
-    path(r'', include(clients_router.urls)),
-    path(r'', include(contracts_router.urls))
 ]
