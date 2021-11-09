@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.http import response
+from django.utils import timezone
 import pytest
 from rest_framework.test import APIClient
 from conftest import get_tokens_for_user, management_user_client
@@ -11,19 +12,10 @@ from django.contrib.auth import get_user_model
 from django import urls
 
 
-# Fixtures :
-# sales_user_client
-# support_user_client
-# management_user_client
-# admin_user_client
-# sales_user
-# management_user
-# support_user
-# admin_user
-
 ############################
 # Tests for sales team
 ############################
+
 
 @pytest.mark.django_db
 def test_sales_user_update_client(sales_user, client_factory):
@@ -169,8 +161,49 @@ def test_sales_user_cant_create_client(sales_user, client_factory):
                                        'company_name': client.company_name,
                                        'already_known': client.already_known
                                        })
-    assert response.status_code == 403
+    assert response.status_code == 201
 
+
+@pytest.mark.django_db
+def sales_user_can_create_event(sales_user, event_factory):
+    """
+    GIVEN a sales user 
+    WHEN the user try to create a new event
+    THEN check if the user is  able create it
+    """
+
+    clt = APIClient()
+    refresh_token = get_tokens_for_user(sales_user)
+    clt.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh_token}')
+
+    event = event_factory.build()
+
+    response = clt.post('/events/', {'name': event.name,
+                          'attendees': event.attendees,
+                          'notes': event.notes})
+    assert response.status_code == 201
+
+
+@pytest.mark.django_db
+def sales_user_can_create_contract(sales_user, contract_factory):
+    """
+    GIVEN a sales user 
+    WHEN the user try to create a new event
+    THEN check if the user is  able create it
+    """
+
+    clt = APIClient()
+    refresh_token = get_tokens_for_user(sales_user)
+    clt.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh_token}')
+
+    contract = contract_factory.build()
+
+    response = clt.post('/contract/', {'sales_contact': contract.sales_contact,
+                          'client': contract.client,
+                          'amount': contract.amount,
+                          })
+    
+    assert response.status_code == 201
 
 
 ##############################
@@ -198,10 +231,31 @@ def test_support_user_update_event_associated(support_user, event_factory, clien
     assert b'"name":"Test_name"' in response.content
 
 
+@pytest.mark.django_db
+def test_support_user_cant_update_event_if_its_passed(support_user, event_factory, client_factory, contract_factory):
+    """
+    GIVEN a support user and a passed event
+    WHEN the user try to update the event
+    THEN check if the user is not able to update it
+    """
+    clt = APIClient()
+    refresh_token = get_tokens_for_user(support_user)
+    clt.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh_token}')
+
+    client = client_factory.create()
+    contract = contract_factory.create(client=client)
+    event = event_factory.create(contract=contract,
+                                 support_contact=support_user,
+                                 event_date="2020-11-09 15:55:56.741854+00:00")
+    
+    response = clt.patch('/events/4/', {'name': 'Test_name'})
+    assert response.status_code == 403
+
 
 ##############################
 # Tests for management team
 ##############################
+
 
 @pytest.mark.django_db
 def test_management_user_is_admin(management_user):

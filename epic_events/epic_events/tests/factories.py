@@ -54,4 +54,4 @@ class EventFactory(factory.django.DjangoModelFactory):
     support_contact = factory.SubFactory(UserFactory)
     attendees = fake.random_int(min = 30)
     notes = fake.text()
-    event_date = timezone.now()
+    event_date = "2022-11-09 15:55:56.741854+00:00"

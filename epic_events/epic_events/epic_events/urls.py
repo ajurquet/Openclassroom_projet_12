@@ -19,7 +19,6 @@ from rest_framework.routers import SimpleRouter
 from clients.views import ClientViewSet
 from events.views import EventViewSet
 from contracts.views import ContractViewSet
-from rest_framework_nested import routers
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -37,5 +36,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', TokenObtainPairView.as_view(), name='login'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api-auth/', include('rest_framework.urls')),
     path(r'', include(router.urls)),
 ]

@@ -2,13 +2,14 @@ from rest_framework import permissions
 
 
 class IsSaleEmployeeConnectedToTheContractOrReadOnly(permissions.BasePermission):
+  
+    def has_permission(self, request, view):
 
-      def has_object_permission(self, request, view, obj):
+      return request.user and request.user.is_authenticated
 
-        message = ""
-        
-        if request.method in permissions.SAFE_METHODS:
-            return True
 
-        return obj.client.sales_contact == request.user
-      
+    def has_object_permission(self, request, view, obj):
+ 
+      if request.method in permissions.SAFE_METHODS:
+          return True
+      return obj.client.sales_contact == request.user
