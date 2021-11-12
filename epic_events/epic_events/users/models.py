@@ -4,6 +4,7 @@ from django.contrib.auth.models import PermissionsMixin
 
 from .managers import CustomUserManager
 
+
 class User(AbstractBaseUser, PermissionsMixin):
     ROLE = [
         ('SALES', 'Sales'),
@@ -26,7 +27,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    def has_perm(self, perm, obj=None): # Mets les permissions en cache
+    def has_perm(self, perm, obj=None):  # Mets les permissions en cache
         return True
 
     def has_module_perms(self, app_label):
@@ -43,7 +44,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.password is not None:
             self.set_password(self.password)
         return super(User, self).save(*args, **kwargs)
-  
-     
+
     class Meta:
         ordering = ("last_name", "first_name")

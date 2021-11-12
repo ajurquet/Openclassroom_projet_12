@@ -17,4 +17,3 @@ class EventSerializer(ModelSerializer):
                   "notes",
                   "ended"
                   ]
-                                

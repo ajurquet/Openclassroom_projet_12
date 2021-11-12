@@ -1,11 +1,8 @@
-from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
-
 from .models import Contract
 
 
 class ContractSerializer(ModelSerializer):
-
 
     class Meta:
         model = Contract
@@ -17,4 +14,3 @@ class ContractSerializer(ModelSerializer):
                   "status",
                   "amount",
                   ]
-                               

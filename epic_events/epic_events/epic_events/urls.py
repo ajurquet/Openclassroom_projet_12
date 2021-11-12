@@ -27,7 +27,7 @@ from rest_framework_simplejwt.views import (
 
 router = SimpleRouter()
 
-router.register(r'clients', ClientViewSet, basename='clients')  
+router.register(r'clients', ClientViewSet, basename='clients')
 router.register(r'contracts', ContractViewSet, basename="contracts")
 router.register(r'events', EventViewSet, basename='events')
 
