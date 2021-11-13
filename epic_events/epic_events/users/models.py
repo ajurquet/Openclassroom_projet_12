@@ -6,11 +6,10 @@ from .managers import CustomUserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    ROLE = [
-        ('SALES', 'Sales'),
-        ('SUPPORT', 'Support'),
-        ('MANAGEMENT', 'Management')
-        ]
+    ROLE = [('SALES', 'Sales'),
+            ('SUPPORT', 'Support'),
+            ('MANAGEMENT', 'Management')
+            ]
 
     username = None
     email = models.EmailField(('Email'), unique=True)

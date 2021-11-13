@@ -6,15 +6,16 @@ class IsSupportEmployeeOrReadOnly(permissions.BasePermission):
     message = "Support employee can only read data"
 
     def has_permission(self, request, view):
+        if request.method == 'POST' and request.user.role == 'SUPPORT':
+            return False
+        return True
 
-        return request.user and request.user.is_authenticated
+    # def has_object_permission(self, request, view, obj):
 
-    def has_object_permission(self, request, view, obj):
+    #     if request.method in permissions.SAFE_METHODS:
+    #         return True
 
-        if request.method in permissions.SAFE_METHODS:
-            return True
-
-        return obj.support_contact == request.user
+    #     return obj.support_contact == request.user
 
 
 class IsEventFinish(permissions.BasePermission):

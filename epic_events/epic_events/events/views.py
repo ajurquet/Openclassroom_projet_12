@@ -4,7 +4,7 @@ from .models import Event
 from .serializers import EventSerializer
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsEventFinish, IsSupportEmployeeOrReadOnly,  \
-                                        IsSaleEmployeeConnectedToTheEventOrReadOnly
+    IsSaleEmployeeConnectedToTheEventOrReadOnly
 
 
 class EventViewSet(viewsets.ModelViewSet):

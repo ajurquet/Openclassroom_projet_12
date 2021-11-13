@@ -281,7 +281,47 @@ def test_support_user_cant_create_client(support_user, client_factory):
                                       'company_name': client.company_name,
                                       'already_known': client.already_known
                                       })
-    print(response.content)
+    assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_support_user_cant_create_contract(support_user, contract_factory):
+    """
+    GIVEN a support user
+    WHEN the user try to create a contract
+    THEN check if the user is not able to create it
+    """
+    clt = APIClient()
+    refresh_token = get_tokens_for_user(support_user)
+    clt.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh_token}')
+
+    contract = contract_factory.build()
+
+    response = clt.post('/contracts/', {'sales_contact': contract.sales_contact,
+                                        'client': contract.client,
+                                        'status': contract.status,
+                                        'amount': contract.amount,
+                                        })
+    assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_support_user_cant_create_event(support_user, event_factory):
+    """
+    GIVEN a support user
+    WHEN the user try to create a event
+    THEN check if the user is not able to create it
+    """
+    clt = APIClient()
+    refresh_token = get_tokens_for_user(support_user)
+    clt.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh_token}')
+
+    event = event_factory.build()
+
+    response = clt.post('/events/', {'name': event.name,
+                                     'attendees': event.attendees,
+                                     'notes': event.notes
+                                     })
     assert response.status_code == 403
 
 
